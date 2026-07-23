@@ -155,10 +155,10 @@ namespace AvlIntrinsics
                 pkg.Write(spawn.m_chanceToSpawn);
 
                 // theme
-                pkg.Write((int)(spawn.m_dungeonRequireTheme));
+                pkg.Write((int)spawn.m_dungeonRequireTheme);
 
                 // biome
-                pkg.Write((ushort)(spawn.m_requireBiome));
+                pkg.Write((ushort)spawn.m_requireBiome);
 
                 // lava?
                 pkg.Write(spawn.m_notInLava);
@@ -422,16 +422,15 @@ namespace AvlIntrinsics
                     pkg.Write(zloc.m_prefabName);
                     pkg.Write((int)zloc.m_biome);
                     pkg.Write((int)zloc.m_biomeArea);
-                    pkg.Write(loc.m_applyRandomDamage);
+                    pkg.Write(loc.m_applyRandomDamage); // Yes, this is still used, just not embedded inside ZoneLocation
                     pkg.Write(zloc.m_centerFirst);
                     pkg.Write(loc.m_clearArea);
-                    //pkg.Write(loc.m_location.m_useCustomInteriorTransform);
                     pkg.Write(zloc.m_exteriorRadius);
                     pkg.Write(zloc.m_interiorRadius);
                     pkg.Write(zloc.m_forestTresholdMin);
                     pkg.Write(zloc.m_forestTresholdMax);
-                    //pkg.Write(loc.m_interiorPosition);
-                    //pkg.Write(loc.m_generatorPosition);
+                    pkg.Write(zloc.m_minDistanceFromCenter);                            // TODO ash
+                    pkg.Write(zloc.m_maxDistanceFromCenter);                            // TODO ash
                     pkg.Write(zloc.m_group);
                     pkg.Write(zloc.m_iconAlways);
                     pkg.Write(zloc.m_iconPlaced);
@@ -442,7 +441,15 @@ namespace AvlIntrinsics
                     pkg.Write(zloc.m_maxDistance);
                     pkg.Write(zloc.m_minTerrainDelta);
                     pkg.Write(zloc.m_maxTerrainDelta);
+                    pkg.Write(zloc.m_minimumVegetation);                                // TODO ash
+                    pkg.Write(zloc.m_maximumVegetation);                                // TODO ash
+                    pkg.Write(zloc.m_surroundCheckVegetation);                          // TODO ash
+                    pkg.Write(zloc.m_surroundCheckDistance);                            // TODO ash
+                    pkg.Write(zloc.m_surroundCheckLayers);                              // TODO ash
+                    pkg.Write(zloc.m_surroundBetterThanAverage);                        // TODO ash
                     pkg.Write(zloc.m_minDistanceFromSimilar);
+                    pkg.Write(zloc.m_groupMax);                                         // TODO ash
+                    pkg.Write(zloc.m_maxDistanceFromSimilar);                           // TODO ash
                     pkg.Write(zloc.m_prioritized ? 200000 : 100000); // spawnAttempts
                     pkg.Write(zloc.m_quantity);
                     pkg.Write(zloc.m_randomRotation);
@@ -903,9 +910,20 @@ namespace AvlIntrinsics
                         //  "Default_small",
                         //  "piece"
                         var extents3 = collider.bounds.extents;
-                        var extents2 = new Vector2(extents3.x, extents3.z);
+                        float maxr = Math.Max(extents3.x, extents3.z);
+                        //var extents2 = new Vector2(extents3.x, extents3.z);
+                        var extents2 = new Vector2(maxr, maxr);
 
-                        float radius = extents2.magnitude; // = extents2.magnitude;
+                        float radius = extents2.magnitude / 2.0f; // = extents2.magnitude;
+
+                        // TODO simpler way to handle collision would be to 
+                        //  create an n-gon, and trim angles that are 
+                        //  close in value to connected segment angles
+                        //  - This would allow for rather simple collision, while
+                        //      improving detection accuracy by A LOT
+                        //  - the alternative is to create n-elipses
+                        //      2d-space is *somewhat* trivial, while 3d is not trivial
+                        //      2d binary shaping allows for a 'ray marching' approach
 
                         if ((collider.gameObject.layer & BLOCK_MASK) == 0)
                             radius = 0;
@@ -1036,6 +1054,10 @@ namespace AvlIntrinsics
                     pkg.Write(veg.m_chanceToUseGroundTilt);
                     pkg.Write(veg.m_minVegetation);
                     pkg.Write(veg.m_maxVegetation);
+                    pkg.Write(veg.m_surroundCheckVegetation);       // TODO
+                    pkg.Write(veg.m_surroundCheckDistance);         // TODO
+                    pkg.Write(veg.m_surroundCheckLayers);           // TODO
+                    pkg.Write(veg.m_surroundBetterThanAverage);     // TODO
 
                     // offset by final transforms:
                     //var obj = UnityEngine.GameObject.Instantiate<GameObject>(veg.m_prefab)

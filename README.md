@@ -20,3 +20,24 @@ The purpose of this unification is simple:
 - `/avldump` - Resource package dumping to use with Avledet server
 - `/avl` - Directly access the Avledet server internals in game via the Lua API, using this command as entry!
 - Connecting to test server with TCP (for Wireshark)
+
+## Building
+
+vscodium / linux
+
+- Install muhammad-sammy C# extension
+
+ctrl+shift+B to run build task
+
+The plugin will be put into the 'dev' profile of r2modman automatically. 
+
+If you dont want this, then comment out that part in AvlIntrinsics.csproj
+
+## TODO
+
+- migrate to reflection .yaml dumping for:
+    - require less updates of AvlIntrinsics
+    - type and field resiliency across new versions
+    - avoids ugly binary file byte structure, ordering, and portability 
+    - yaml is user editable
+    - more transparency to user
