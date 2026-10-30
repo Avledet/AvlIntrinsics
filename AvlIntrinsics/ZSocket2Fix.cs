@@ -417,7 +417,8 @@ namespace AvlIntrinsics
                 }
 
                 ZSocket2 socket = new ZSocket2();
-                socket.StartHost(ZSteamSocket.m_steamDataPort);
+                ZSocket2.SetDataPort(ZSteamSocket.m_steamDataPort);
+                socket.StartHost();
                 __instance.m_hostSocket = socket;
                 ZLog.LogWarning("Started TCP Custom Socket");
             }

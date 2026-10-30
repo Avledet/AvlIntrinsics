@@ -19,6 +19,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="MonoMod" Version="22.7.31.1" />
     <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="all" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
     <!-- <PackageReference Include="HarmonyX" Version="2.10.2" /> -->
   </ItemGroup>
 
@@ -91,7 +92,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <MOD_DEPLOYPATH Condition="'$(MOD_DEPLOYPATH)' == ''">$(HOME)/.config/r2modmanPlus-local/Valheim/profiles/dev/BepInEx/plugins/AvlIntrinsics</MOD_DEPLOYPATH>
+    <!-- <MOD_DEPLOYPATH Condition="'$(MOD_DEPLOYPATH)' == ''">$(HOME)/.config/r2modmanPlus-local/Valheim/profiles/dev/BepInEx/plugins/AvlIntrinsics</MOD_DEPLOYPATH> -->
+    <MOD_DEPLOYPATH Condition="'$(MOD_DEPLOYPATH)' == ''">$(HOME)/.config/r2modmanPlus-local/Valheim/profiles/dev/BepInEx/plugins/Unknown-AvlIntrinsics.dll</MOD_DEPLOYPATH>
     <!--The below might fix missing Corelib-->
     <!-- <RuntimeIdentifier>win-x86</RuntimeIdentifier> -->
   </PropertyGroup>

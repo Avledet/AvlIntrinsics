@@ -109,16 +109,24 @@ namespace AvlIntrinsics
                 StringBuilder builder = new StringBuilder();
 
                 builder.Append("Documentation automatically generated from Valheim ").Append(Version.CurrentVersion.ToString())
-                    .AppendLine(",,");
+                    .AppendLine(",,,");
 
                 builder.Append("Current version,").Append(Version.CurrentVersion.ToString()).AppendLine();
-                builder.Append("Network version,").Append(Version.m_networkVersion).AppendLine();
-                builder.Append("World version,").Append(Version.m_worldVersion).AppendLine();
-                builder.Append("Worldgen version,").Append(Version.m_worldGenVersion).AppendLine();
+                builder.Append("Network version,").Append(Version.c_networkVersion).AppendLine();
+                builder.Append("WorldGen version,").Append(Version.c_WorldGenVersion).AppendLine();
+                builder.Append("Player version,").Append((int)Version.c_PlayerVersion).Append(",").Append(Version.c_PlayerVersion).AppendLine();
+                builder.Append("World version,").Append((int)Version.c_WorldVersion).Append(",").Append(Version.c_WorldVersion).AppendLine();
+                builder.Append("BiomeData version,").Append((int)Version.c_biomeDataVersion).Append(",").Append(Version.c_biomeDataVersion).AppendLine();
+                builder.Append("ItemData version,").Append((int)Version.c_ItemDataVersion).Append(",").Append(Version.c_ItemDataVersion).AppendLine();
+                builder.Append("PlayerData version,").Append((int)Version.c_PlayerDataVersion).Append(",").Append(Version.c_PlayerDataVersion).AppendLine();
+                builder.Append("Map version,").Append((int)Version.c_MapVersion).Append(",").Append(Version.c_MapVersion).AppendLine();
+                builder.Append("SharedMap version,").Append((int)Version.c_SharedMapVersion).Append(",").Append(Version.c_SharedMapVersion).AppendLine();
+                builder.Append("CachedMinimap version,").Append((int)Version.c_CachedMinimapVersion).Append(",").Append(Version.c_CachedMinimapVersion).AppendLine();
+                
                 builder.Append("Location version,").Append(ZoneSystem.instance.m_locationVersion).AppendLine();
-                builder.Append("Player version,").Append(Version.m_playerVersion).AppendLine();
-                builder.Append("Player data version,").Append(Version.m_playerDataVersion).AppendLine();
-                builder.Append("Item data version,").Append(Version.m_itemDataVersion).AppendLine();
+                
+                
+                
 
                 File.WriteAllText(Main.DOC_OUT_PATH + "version.csv", builder.ToString());
             }
@@ -634,13 +642,19 @@ namespace AvlIntrinsics
                     foreach (var doorDef in dungeon.m_doorTypes)
                     {
                         var doorPrefab = doorDef.m_prefab;
-                        var doorPrefabName = doorPrefab.GetComponent<ZNetView>().GetPrefabName();
+                        var doorPrefabName = doorPrefab
+                            ?.GetComponent<ZNetView>()
+                            ?.GetPrefabName() ?? ("(I AM NULL: " + doorPrefab.name);
 
                         LogInfo("door: " + doorPrefabName + " (" + doorIdx++ + " / " + doorPrefab.name + ")");
                         if (!ZNetScene.instance.m_namedPrefabs.ContainsKey(doorPrefabName.GetStableHashCode()))
                         {
-                            // THROW panic out, becuase this package is now useless
-                            throw new Exception("Door Prefab: " + doorPrefabName + " not found");
+                            LogWarning("Door Prefab: " + doorPrefabName + " not found");
+                            // if the read name-hash, consider a skip
+                            pkg.Write((int)0);
+                            continue;
+                            // THROW panic out, because this package is now useless
+                            //throw new Exception("Door Prefab: " + doorPrefabName + " not found");
                         }
 
                         // Debug anchor (positional anchor)
@@ -777,10 +791,10 @@ namespace AvlIntrinsics
 
                 var layers = Enumerable.Range(0, 31).Select(index => index + ": " + LayerMask.LayerToName(index)).Where(l => !string.IsNullOrEmpty(l)).ToList();
 
-                int BLOCK_MASK = ZoneSystem.m_instance.m_blockRayMask;
-                int SOLID_MASK = ZoneSystem.m_instance.m_solidRayMask;
-                int STATIC_MASK = ZoneSystem.m_instance.m_staticSolidRayMask;
-                int TERRAIN_MASK = ZoneSystem.m_instance.m_terrainRayMask;
+                int BLOCK_MASK = ZoneSystem.instance.m_blockRayMask;
+                int SOLID_MASK = ZoneSystem.instance.m_solidRayMask;
+                int STATIC_MASK = ZoneSystem.instance.m_staticSolidRayMask;
+                int TERRAIN_MASK = ZoneSystem.instance.m_terrainRayMask;
 
                 //LogWarning("Layers: \n - " + string.Join("\n - ", layers));
                 //

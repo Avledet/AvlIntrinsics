@@ -30,6 +30,8 @@ namespace AvlIntrinsics
                 return;
             }
 
+            Main.Instance.RunDumperCoroutine();
+/* 
             try
             {
                 AvlDumper.DumpDocs();
@@ -56,7 +58,7 @@ namespace AvlIntrinsics
                         "Dumping failed; see logs"
                 });
                 throw new Exception("Exception: ", ex);
-            }
+            } */
         }
     }
 }

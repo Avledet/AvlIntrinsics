@@ -103,7 +103,7 @@ namespace AvlIntrinsics
             // Just replace the bind for simplicity
             [HarmonyPrefix]
             [HarmonyPatch(nameof(ZSocket2.StartHost))]
-            static bool StartHostPrefix(ref bool __result, ref ZSocket2 __instance, int port)
+            static bool StartHostPrefix(ref bool __result, ref ZSocket2 __instance)
             {
                 if (Main.m_isDedicated && Main.m_serverBindAddressIPv4 != 0)
                 {
@@ -114,9 +114,9 @@ namespace AvlIntrinsics
                             __instance.m_listner.Stop();
                             __instance.m_listner = null;
                         }
-                        __instance.m_listner = new TcpListener(Main.m_serverBindIpAddress, port);
+                        __instance.m_listner = new TcpListener(Main.m_serverBindIpAddress, 2456);
                         __instance.m_listner.Start();
-                        __instance.m_listenPort = port;
+                        __instance.m_listenPort = 2456; //ZSocket2.s_dataPort
 
                         __result = true;
                     }

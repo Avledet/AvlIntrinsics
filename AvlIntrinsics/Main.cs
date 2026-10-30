@@ -45,8 +45,58 @@ namespace AvlIntrinsics
 
         Harmony _harmony;
 
+        public static Main Instance;
+
+        public void RunDumperCoroutine() {
+            base.StartCoroutine(this.DelayedRunDumper());
+        }
+
+        private IEnumerator DelayedRunDumper() {
+            ZRoutedRpc.instance.InvokeRoutedRPC(ZDOMan.instance.m_sessionID, "ChatMessage", new object[]
+            {
+                    Player.m_localPlayer.GetHeadPoint(),
+                    (int)Talker.Type.Normal,
+                    UserInfo.GetLocalUser(),
+                    "Starting dump (game will freeze momentarily)"
+            });
+
+            yield return new WaitForSeconds(1);
+
+            try
+            {
+                AvlDumper.DumpDocs();
+                AvlDumper.DumpPackages();
+
+                //MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Run with /avl_dump confirm");
+                //Chat.print("Dumping success");
+                ZRoutedRpc.instance.InvokeRoutedRPC(ZDOMan.instance.m_sessionID, "ChatMessage", new object[]
+                {
+                        Player.m_localPlayer.GetHeadPoint(),
+                        (int)Talker.Type.Normal,
+                        UserInfo.GetLocalUser(),
+                        "Dumping success"
+                });
+            }
+            catch (Exception ex)
+            {
+                //Chat.print("Dumping exception, see console");
+                ZRoutedRpc.instance.InvokeRoutedRPC(ZDOMan.instance.m_sessionID, "ChatMessage", new object[]
+                {
+                        Player.m_localPlayer.GetHeadPoint(),
+                        (int)Talker.Type.Normal,
+                        UserInfo.GetLocalUser(),
+                        "Dumping failed; see logs"
+                });
+                throw new Exception("Exception: ", ex);
+            }
+
+            yield break;
+        }
+
         private void Awake()
         {
+            Instance = this;
+
             ZLog.Log("Loading AvlIntrinsics...");
 
             LOGGER = Logger;
