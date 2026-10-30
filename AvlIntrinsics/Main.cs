@@ -27,7 +27,7 @@ namespace AvlIntrinsics
         // BepInEx' plugin metadata
         public const string PluginGUID = "com.crzi.AvlIntrinsics";
         public const string PluginName = "AvlIntrinsics";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "1.0.1";
 
         public const string DUMPER_OUT_PATH = "dumped/";
         public const string PKG_OUT_PATH = DUMPER_OUT_PATH + "pkg/";
